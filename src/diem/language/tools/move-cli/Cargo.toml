@@ -1,0 +1,61 @@
+[package]
+name = "move-cli"
+version = "0.1.0"
+authors = ["Diem Association <opensource@diem.com>"]
+description = "CLI frontend for the Move compiler and VM"
+repository = "https://github.com/diem/diem"
+homepage = "https://diem.com"
+license = "Apache-2.0"
+publish = false
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.38"
+colored = "2.0.0"
+difference = "2.0.0"
+include_dir = { version = "0.6.0", features = ["search"] }
+once_cell = "1.7.2"
+serde = { version = "1.0.124", default-features = false }
+serde_yaml = "0.8.17"
+structopt = "0.3.21"
+tempfile = "3.2.0"
+walkdir = "2.3.1"
+codespan-reporting = "0.11.1"
+itertools = "0.10.0"
+
+bcs = "0.1.2"
+bytecode-verifier = { path = "../../bytecode-verifier" }
+
+disassembler = { path = "../disassembler" }
+move-command-line-common = { path = "../../move-command-line-common" }
+diem-workspace-hack = { path = "../../../common/workspace-hack" }
+move-bytecode-utils = { path = "../move-bytecode-utils" }
+move-coverage = { path = "../move-coverage" }
+move-core-types = { path = "../../move-core/types" }
+move-ir-types = { path = "../../move-ir/types" }
+move-lang = { path = "../../move-lang" }
+move-stdlib = { path = "../../move-stdlib", features = ["testing"] }
+move-symbol-pool = { path = "../../move-symbol-pool" }
+move-vm-types = { path = "../../move-vm/types" }
+move-vm-runtime = { path = "../../move-vm/runtime" }
+read-write-set = { path = "../read-write-set" }
+read-write-set-dynamic = { path = "../read-write-set/dynamic" }
+resource-viewer = { path = "../resource-viewer" }
+move-binary-format = { path = "../../move-binary-format" }
+move-package = { path = "../move-package" }
+move-prover = { path = "../../move-prover" }
+move-unit-test = { path = "../move-unit-test" }
+errmapgen = { path = "../../move-prover/errmapgen" }
+bytecode-source-map = { path = "../../move-ir-compiler/bytecode-source-map" }
+move-bytecode-viewer = { path = "../move-bytecode-viewer" }
+
+[dev-dependencies]
+datatest-stable = "0.1.1"
+
+[[bin]]
+name = "move"
+path = "src/main.rs"
+
+[[test]]
+name = "cli_testsuite"
+harness = false

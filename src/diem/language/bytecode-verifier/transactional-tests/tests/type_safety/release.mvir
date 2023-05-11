@@ -1,0 +1,9 @@
+//# publish
+module 0x1.M {
+    struct Coin { value: u64 }
+    t(): Self.Coin {
+        // cannot pop without the drop ability
+        _ = Coin { value: 0 };
+        return;
+    }
+}

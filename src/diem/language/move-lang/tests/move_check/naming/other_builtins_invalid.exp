@@ -1,0 +1,18 @@
+error[E03007]: too many type arguments
+  ┌─ tests/move_check/naming/other_builtins_invalid.move:3:9
+  │
+3 │         freeze<u64, bool>(x);
+  │         ^^^^^^--------------
+  │         │
+  │         Expected 1 type argument(s) but got 2
+  │         Invalid call to builtin function: 'freeze'
+
+error[E03008]: too few type arguments
+  ┌─ tests/move_check/naming/other_builtins_invalid.move:4:9
+  │
+4 │         freeze<>(x);
+  │         ^^^^^^-----
+  │         │
+  │         Expected 1 type argument(s) but got 0
+  │         Invalid call to builtin function: 'freeze'
+

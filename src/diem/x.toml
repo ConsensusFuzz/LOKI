@@ -1,0 +1,357 @@
+[grcov.installer]
+version = "0.8.2"
+
+[system-tests]
+jsonrpc-integration-tests = { path = "json-rpc/integration-tests" }
+shuffle-integration-tests = { path = "shuffle/integration-tests" }
+smoke-test = { path = "smoke-test" }
+testcases = { path = "testsuite/testcases" }
+
+[cargo.sccache]
+bucket = "ci-artifacts.diem.com"
+prefix = "sccache/diem/"
+public = true
+region = "us-west-2"
+endpoint = "https://s3-us-west-2.amazonaws.com"
+required-cargo-home = "/opt/cargo/"
+required-git-home = "/opt/git/diem"
+envs = [
+   #To debug sccache uncomment the two lines below.
+   #["SCCACHE_ERROR_LOG","/tmp/sccache_log"],
+   #["SCCACHE_LOG", "sccache::compiler::compiler=trace,rusoto_core::request=trace"],
+]
+
+[cargo.sccache.installer]
+version = "0.2.16-alpha.0"
+git = "https://github.com/diem/sccache.git"
+git-rev = "ef50d87a58260c30767520045e242ccdbdb965af"
+features = [ "s3" ]
+
+
+[fix]
+
+[clippy]
+allowed = [
+    # Deriving Arbitrary often causes this warning to show up.
+    "clippy::unit_arg",
+    "clippy::eval-order-dependence",
+    "clippy::new-without-default",
+    "clippy::rc_buffer",
+    "clippy::upper_case_acronyms",
+    "clippy::len-without-is-empty",
+    "clippy::from-iter-instead-of-collect",
+    "clippy::while-let-on-iterator",
+    "clippy::bool-assert-comparison",
+    "clippy::needless-collect",
+    "clippy::enum-variant-names",
+    "clippy::self-named-constructors",
+]
+warn = [
+    "clippy::wildcard_dependencies",
+]
+
+[hakari]
+version = "v2"
+hakari-package = "diem-workspace-hack"
+unify-target-host = "replicate-target-as-host"
+
+[[hakari.platforms]]
+triple = "x86_64-unknown-linux-gnu"
+target-features = "unknown"
+
+[[hakari.platforms]]
+triple = "x86_64-apple-darwin"
+target-features = "unknown"
+
+# Ideally we'd have powerpc-unknown-linux-gnu here as well, but unification causes openssl-sys to be included,
+# and openssl can't be cross-compiled without extra work. This may need to be fixed in hakari through being able
+# to say "consider only these packages for these target platforms".
+
+# Don't consider the crypto packages as they do weird things with mutually exclusive features.
+[[hakari.omitted-packages]]
+name = "diem-crypto"
+version = "0.1.0"
+workspace-path = "crates/diem-crypto"
+
+[[hakari.omitted-packages]]
+name = "diem-crypto-derive"
+version = "0.1.0"
+workspace-path = "crates/diem-crypto-derive"
+
+[[hakari.omitted-packages]]
+name = "bytecode-interpreter-crypto"
+version = "0.1.0"
+workspace-path = "language/move-prover/interpreter/crypto"
+
+# Also exclude the devtools packages since they get compiled with a different set of options.
+[[hakari.omitted-packages]]
+name = "x"
+version = "0.1.0"
+workspace-path = "devtools/x"
+
+[[hakari.omitted-packages]]
+name = "x-core"
+version = "0.1.0"
+workspace-path = "devtools/x-core"
+
+[[hakari.omitted-packages]]
+name = "x-lint"
+version = "0.1.0"
+workspace-path = "devtools/x-lint"
+
+# Exclude the fail crate because the failpoints feature should only be enabled
+# for certain builds.
+[[hakari.omitted-packages]]
+name = "fail"
+version = "0.4.0"
+crates-io = true
+
+# This follows the same syntax as CargoOptionsSummary in guppy.
+[summaries.default]
+version = "v2"
+include-dev = false
+initials-platform = "standard"
+
+[summaries.default.target-platform]
+triple = "x86_64-unknown-linux-gnu"
+target-features = "all"
+
+[summaries.default.host-platform]
+triple = "x86_64-unknown-linux-gnu"
+target-features = "all"
+
+[[summaries.default.omitted-packages]]
+name = "diem-workspace-hack"
+version = "0.1.0"
+workspace-path = "common/workspace-hack"
+
+[summaries.full]
+version = "v2"
+include-dev = true
+initials-platform = "standard"
+# Don't set target or host platforms, or omitted packages, for the full set.
+
+[workspace]
+
+# Regex for allowed characters in paths. Regex must have ^ and $ anchors.
+allowed-paths = "^([a-zA-Z0-9._\\-/@:]|-)+$"
+
+whitespace-exceptions = [
+    ".github/actions/*/dist/*",
+    # TODO: reevaluate skipping whitespace checks in .md files for the website
+    "developers.diem.com/**/*.md",
+    "**/*.exp",
+    "**/*.errmap",
+    "**/*.abi",
+]
+
+[workspace.enforced-attributes]
+authors = ["Diem Association <opensource@diem.com>"]
+license = "Apache-2.0"
+
+[workspace.banned-deps.direct]
+lazy_static = "use once_cell::sync::Lazy instead"
+
+[workspace.banned-deps.default-build]
+criterion = "criterion is only for benchmarks"
+proptest = "proptest is only for testing and fuzzing"
+
+[workspace.direct-dep-dups]
+allow = [
+]
+
+[workspace.overlay]
+features = ["fuzzing"]
+
+# This is a list of test-only members. These are workspace members that do not form part of the main
+# Diem production codebase, and are only used to verify correctness and/or performance.
+#
+# *** IMPORTANT ***
+#
+# Published developer tools (e.g. Move compiler) ARE part of the production Diem codebase.
+# They should be listed in the root Cargo.toml's default-members, not here!
+#
+# Before adding a new crate to this list, ensure that it is *actually* test-only. If not, add it
+# (or a crate that depends on it) to the root Cargo.toml's default-members list!
+#
+# For more, see the "Conditional compilation for tests" section in documentation/coding_guidelines.md.
+[workspace.test-only]
+members = [
+    # Please keep this list in alphabetical order!
+
+    "bytecode-interpreter-testsuite",
+    "bytecode-verifier-tests",
+    "bytecode-verifier-transactional-tests",
+    "cli",
+    "cluster-test",
+    "testcases",
+    "diem-documentation-tool",
+    "diem-e2e-tests-replay",
+    "diem-fuzz",
+    "diem-fuzzer",
+    "diem-json-rpc-client",
+    "diem-keygen",
+    "diem-proptest-helpers",
+    "diem-rest-client",
+    "diem-retrier",
+    "data-streaming-service", # Will be removed once state sync v2 is plugged into diem-node.
+    "diem-swarm",
+    "diem-transactional-test-harness",
+    "diem-transaction-benchmarks",
+    "diem-wallet",
+    "executor-benchmark",
+    "executor-test-helpers",
+    "forge",
+    "forge-cli",
+    "functional-tests",
+    "generate-format",
+    "invalid-mutations",
+    "ir-testsuite",
+    "jsonrpc-integration-tests",
+    "jsonrpc-types-proto",
+    "language-benchmarks",
+    "language-e2e-tests",
+    "language-e2e-testsuite",
+    "many-keys-stress-test",
+    "memsocket",
+    "mirai-dataflow-analysis",
+    "module-generation",
+    "move-lang-functional-tests",
+    "move-lang-transactional-tests",
+    "move-oncall-trainer",
+    "move-prover-test-utils",
+    "move-transactional-test-runner",
+    "move-vm-integration-tests",
+    "move-vm-transactional-tests",
+    "offchain",
+    "scratchpad-benchmark",
+    "sdk-compatibility",
+    "serializer-tests",
+    "shuffle",
+    "shuffle-custom-move-code",
+    "shuffle-integration-tests",
+    "smoke-test",
+    "socket-bench-server",
+    "state-sync-driver", # Will be removed once state sync v2 is plugged into diem-node.
+    "test-generation",
+    "transaction-emitter",
+    "x",
+    "x-core",
+    "x-lint",
+
+    # Please keep this list in alphabetical order!
+]
+
+[workspace.move-to-diem-deps]
+# By default, all crates in the language directory are considered Move crates
+# and are forbidden from depending on any Diem crates.
+#
+# Adding a crate's name to this list will mark it as a Diem crate so that the
+# linter will not impose said restriction on it.
+#
+# Note: if your crate is indeed a Move crate and you are getting the linter
+# yelling at you, you should redesign your crate and properly remove that
+# dependency, instead of adding the crate to this list and silencing the lint.
+diem_crates_in_language = [
+    "diem-transactional-test-harness",
+    "language-e2e-testsuite",
+    "ir-testsuite",
+    "language-e2e-tests",
+    "functional-tests",
+    "move-lang-functional-tests",
+]
+# A special set of diem crates Move crates are allowed to depend on.
+#
+# You should not add new entries to this list unless you have a rare justifiable
+# reason. (read: Just don't.)
+#
+# Particularly, please do not abuse this to silence the lint when it complains
+# about Move crates depending on Diem ones. Again, you should instead fix
+# the design of your crate so it doesn't have to depend on Diem.
+exclude = [
+    "diem-workspace-hack",
+]
+
+# Interesting subsets of the workspace, These are used for generating and
+# checking dependency summaries.
+
+[subsets.lsr]
+# The Diem safety rules TCB.
+root-members = [
+    "safety-rules",
+]
+
+[subsets.lec]
+# The Diem execution correctness TCB.
+root-members = [
+    "execution-correctness",
+]
+
+[subsets.key-manager]
+# The Diem key manager TCB.
+root-members = [
+    "diem-key-manager",
+]
+
+[subsets.release]
+# The Diem release binaries
+root-members = [
+    "backup-cli",
+    "db-bootstrapper",
+    "diem-genesis-tool",
+    "diem-key-manager",
+    "diem-node",
+    "diem-operational-tool",
+    "execution-correctness",
+    "safety-rules",
+]
+
+# ---
+# Determinator rules
+# ---
+
+# CI-related files. TODO: maybe have separate rules for local and CI?
+[[determinator.path-rule]]
+globs = [".github/**/*", "codecov.yml"]
+mark-changed = "all"
+
+# Core devtools files.
+[[determinator.path-rule]]
+globs = ["scripts/dev_setup.sh", "x.toml"]
+mark-changed = "all"
+
+[[determinator.path-rule]]
+# Ignore website and other ancillary files, and scripts not listed above.
+globs = ["developers.diem.com/**/*", "documentation/**/*", "docker/**/*", "helm/**/*", "specifications/**/*", "scripts/**/*"]
+mark-changed = []
+
+[[determinator.path-rule]]
+# A bunch of images that should be ignored, I guess.
+globs = ["diem.png", ".assets/diem.png", "storage/data.png"]
+mark-changed = []
+
+[[determinator.path-rule]]
+# Ignore *.md documentation
+globs = ["*.md"]
+mark-changed = []
+
+[[determinator.path-rule]]
+# Required by get_stdlib_script_abis in transaction-builder-generator.
+globs = ["diem-move/diem-framework/DPN/releases/artifacts/current/**/*"]
+mark-changed = ["transaction-builder-generator"]
+post-rule = "skip-rules"
+
+[[determinator.path-rule]]
+# On changes of diem-framework or move-stdlib, rerun the tests in move-prover.
+globs = ["diem-move/diem-framework/**/*", "language/move-stdlib/**/*"]
+mark-changed = ["move-prover"]
+
+[[determinator.path-rule]]
+# On changes to files related to VS Code, build the move-analyzer package.
+globs = [".vscode/**/*", "language/move-analyzer/editors/code/**/*.json"]
+mark-changed = ["move-analyzer"]
+
+[[determinator.package-rule]]
+# x controls the build process, so if it changes, build everything.
+on-affected = ["x"]
+mark-changed = "all"

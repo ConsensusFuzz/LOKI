@@ -1,0 +1,30 @@
+[package]
+name = "executor-test-helpers"
+version = "0.1.0"
+authors = ["Diem Association <opensource@diem.com>"]
+description = "Diem executor test helpers"
+repository = "https://github.com/diem/diem"
+homepage = "https://diem.com"
+license = "Apache-2.0"
+publish = false
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.38"
+rand = "0.8.3"
+tempfile = "3.2.0"
+
+executor = { path = "../executor" }
+executor-types = { path = "../executor-types" }
+diemdb = { path = "../../storage/diemdb", features = ["fuzzing"] }
+diem-config = { path = "../../config" }
+diem-crypto = { path = "../../crates/diem-crypto" }
+diem-genesis-tool = {path = "../../config/management/genesis", features = ["testing"] }
+diem-temppath = { path = "../../common/temppath" }
+diem-types = { path = "../../types", features = ["fuzzing"] }
+diem-vm = { path = "../../diem-move/diem-vm" }
+diem-workspace-hack = { path = "../../common/workspace-hack" }
+storage-interface = { path = "../../storage/storage-interface" }
+storage-service = { path = "../../storage/storage-service" }
+diem-transaction-builder = { path = "../../sdk/transaction-builder" }
+vm-genesis = { path = "../../diem-move/vm-genesis" }

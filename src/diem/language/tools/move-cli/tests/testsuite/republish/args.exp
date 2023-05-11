@@ -1,0 +1,77 @@
+Command `sandbox publish -v`:
+Compiling Move modules...
+Found and compiled 2 modules
+Publishing a new module 00000000000000000000000000000042::M (wrote 56 bytes)
+Publishing a new module 00000000000000000000000000000043::N (wrote 56 bytes)
+Wrote 112 bytes of module ID's and code
+Command `sandbox view storage/0x00000000000000000000000000000042/modules/M.mv`:
+// Move bytecode v4
+module 42.M {
+
+
+
+}
+Command `sandbox view storage/0x00000000000000000000000000000043/modules/N.mv`:
+// Move bytecode v4
+module 43.N {
+
+
+
+}
+Command `sandbox publish -v`:
+Compiling Move modules...
+Found and compiled 2 modules
+Updating an existing module 00000000000000000000000000000042::M (wrote 56 bytes)
+Updating an existing module 00000000000000000000000000000043::N (wrote 56 bytes)
+Wrote 112 bytes of module ID's and code
+Command `sandbox view storage/0x00000000000000000000000000000042/modules/M.mv`:
+// Move bytecode v4
+module 42.M {
+
+
+
+}
+Command `sandbox view storage/0x00000000000000000000000000000043/modules/N.mv`:
+// Move bytecode v4
+module 43.N {
+
+
+
+}
+Command `sandbox publish -v --no-republish`:
+Compiling Move modules...
+error[E02001]: duplicate declaration, item, or annotation
+  ┌─ build/mv_interfaces/00000000000000000000000000000042/M.move:1:14
+  │
+1 │ module 0x42::M {
+  │              ^ Duplicate definition for module '0x42::M'
+  │
+  ┌─ src/M.move:2:8
+  │
+2 │ module M {
+  │        - Module previously defined here
+
+error[E02001]: duplicate declaration, item, or annotation
+  ┌─ build/mv_interfaces/00000000000000000000000000000043/N.move:1:14
+  │
+1 │ module 0x43::N {
+  │              ^ Duplicate definition for module '0x43::N'
+  │
+  ┌─ src/N.move:2:8
+  │
+2 │ module N {
+  │        - Module previously defined here
+
+Command `sandbox publish -v --no-republish src/M.move`:
+Compiling Move modules...
+error[E02001]: duplicate declaration, item, or annotation
+  ┌─ build/mv_interfaces/00000000000000000000000000000042/M.move:1:14
+  │
+1 │ module 0x42::M {
+  │              ^ Duplicate definition for module '0x42::M'
+  │
+  ┌─ src/M.move:2:8
+  │
+2 │ module M {
+  │        - Module previously defined here
+

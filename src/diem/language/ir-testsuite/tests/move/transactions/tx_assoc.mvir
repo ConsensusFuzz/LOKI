@@ -1,0 +1,26 @@
+import 0x1.CoreAddresses;
+import 0x1.Signer;
+//! sender: diemroot
+main(account: signer) {
+    assert(Signer.address_of(&account) == 0xA550C18, 0);
+    return;
+}
+
+//! new-transaction
+import 0x1.CoreAddresses;
+import 0x1.Signer;
+main(account: signer) {
+    assert(Signer.address_of(&account) != 0xA550C18, 1);
+    return;
+}
+
+//! new-transaction
+//! account: alice
+//! sender: alice
+import 0x1.CoreAddresses;
+import 0x1.Signer;
+main(account: signer) {
+    assert(Signer.address_of(&account) != 0xA550C18, 2);
+    assert({{alice}} != 0xA550C18, 3);
+    return;
+}

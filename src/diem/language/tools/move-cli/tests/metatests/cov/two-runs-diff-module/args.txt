@@ -1,0 +1,3 @@
+sandbox publish src/modules --mode bare
+sandbox run src/scripts/test.move --args 0u8 --mode bare --dry-run
+sandbox run src/scripts/test.move --args 1u8 --mode bare --dry-run
