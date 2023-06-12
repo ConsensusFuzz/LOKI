@@ -1,0 +1,18 @@
+name: Publish docker image
+
+on: 
+  push: 
+    branches:
+      - release-1.4-BFT-3
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish image to dockerhub
+      run: bash scripts/publish_images.sh
+      env: 
+        DOCKER_PASSWORD: ${{ secrets.dockerhub }}
+

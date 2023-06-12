@@ -1,0 +1,5 @@
+//! type-args: DiemFramework::DiemAccount::Balance
+main<T>() {
+    return;
+}
+// check: NUMBER_OF_TYPE_ARGUMENTS_MISMATCH

@@ -1,4 +1,0 @@
-//# run
-main<T>() { // too few type arguments
-    return;
-}

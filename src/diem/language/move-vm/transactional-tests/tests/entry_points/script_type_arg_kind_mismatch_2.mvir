@@ -1,4 +1,0 @@
-//# run --type-args bool
-main<T: key>() { // bool does not have key
-    return;
-}

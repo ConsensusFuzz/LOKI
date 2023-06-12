@@ -1,1 +1,0 @@
-sandbox publish src/example.move

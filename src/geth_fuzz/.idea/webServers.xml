@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="59f30145-076d-4ead-978a-8e08a51d7036" name="sandy-geth" url="http://192.168.83.81">
+        <fileTransfer rootFolder="/root" accessType="SFTP" host="166.111.83.81" port="2333" sshConfigId="ffb92e6d-60e2-42ca-86c9-38288be727bb" sshConfig="root@166.111.83.81:2333 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

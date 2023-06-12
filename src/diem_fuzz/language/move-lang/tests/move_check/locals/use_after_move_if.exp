@@ -1,0 +1,24 @@
+error[E06002]: use of unassigned variable
+  ┌─ tests/move_check/locals/use_after_move_if.move:5:17
+  │
+4 │         if (cond) { _ = move x };
+  │                         ------ The variable might not have a value due to this position. The variable must be assigned a value before being used
+5 │         let _ = move x + 1;
+  │                 ^^^^^^ Invalid usage of variable 'x'
+
+error[E06002]: use of unassigned variable
+   ┌─ tests/move_check/locals/use_after_move_if.move:11:17
+   │
+10 │         if (cond) { _ = move x };
+   │                         ------ The variable might not have a value due to this position. The variable must be assigned a value before being used
+11 │         let _ = x + 1;
+   │                 ^ Invalid usage of variable 'x'
+
+error[E06002]: use of unassigned variable
+   ┌─ tests/move_check/locals/use_after_move_if.move:17:17
+   │
+16 │         if (cond) { _ = move x };
+   │                         ------ The variable might not have a value due to this position. The variable must be assigned a value before being used
+17 │         let _ = &x;
+   │                 ^^ Invalid usage of variable 'x'
+

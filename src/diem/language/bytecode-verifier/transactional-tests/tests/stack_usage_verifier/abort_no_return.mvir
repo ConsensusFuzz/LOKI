@@ -1,5 +1,0 @@
-//# run
-main() {
-    // no return needed
-    abort 0;
-}
